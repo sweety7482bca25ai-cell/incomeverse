@@ -702,6 +702,344 @@ nav {
         </div>
     </div>
 </footer>
+   <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:#f3f3f3;
+      height:100vh;
+    }
+    .chatbot-toggle{
+      position:fixed;
+      bottom:25px;
+      right:25px;
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      background:#0078ff;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+      transition:0.3s;
+      z-index:1000;
+    }
+
+    .chatbot-toggle:hover{
+      background:#005fd1;
+      transform:scale(1.05);
+    }
+    .chatbot-container{
+      position:fixed;
+      bottom:95px;
+      right:25px;
+      width:350px;
+      height:500px;
+      background:white;
+      border-radius:16px;
+      overflow:hidden;
+      display:none;
+      flex-direction:column;
+      box-shadow:0 5px 20px rgba(0,0,0,0.2);
+      z-index:1000;
+    }
+    .chatbot-header{
+      background:#0078ff;
+      color:white;
+      padding:15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:18px;
+      font-weight:bold;
+    }
+
+    .close-btn{
+      background:none;
+      border:none;
+      color:white;
+      font-size:22px;
+      cursor:pointer;
+    }
+    .chatbot-messages{
+      flex:1;
+      padding:15px;
+      overflow-y:auto;
+      background:#f8f9fa;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .message{
+      padding:10px 14px;
+      border-radius:18px;
+      max-width:80%;
+      line-height:1.5;
+      word-wrap:break-word;
+      font-size:14px;
+    }
+
+    .user{
+      align-self:flex-end;
+      background:#0078ff;
+      color:white;
+      border-bottom-right-radius:5px;
+    }
+
+    .bot{
+      align-self:flex-start;
+      background:#e5e5ea;
+      color:black;
+      border-bottom-left-radius:5px;
+    }
+    .chatbot-input-area{
+      display:flex;
+      border-top:1px solid #ddd;
+      background:white;
+    }
+
+    .chatbot-input-area input{
+      flex:1;
+      padding:14px;
+      border:none;
+      outline:none;
+      font-size:14px;
+    }
+
+    .chatbot-input-area button{
+      border:none;
+      background:#0078ff;
+      color:white;
+      padding:0 20px;
+      cursor:pointer;
+      transition:0.3s;
+      font-weight:bold;
+      font-size:16px;
+    }
+
+    .chatbot-input-area button:hover{
+      background:#005fd1;
+    }
+    .icon{
+      margin-right:6px;
+    }
+    @media(max-width:480px){
+
+      .chatbot-container{
+        width:95%;
+        right:2.5%;
+        height:85vh;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="chatbot-container" id="chatbot">
+
+    <div class="chatbot-header">
+      <span>
+        <i class="fa-solid fa-robot"></i>
+        AI Assistant
+      </span>
+
+      <button class="close-btn" onclick="toggleChat()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="chatbot-messages" id="chat-messages">
+
+      <div class="message bot">
+        <i class="fa-solid fa-hand icon"></i>
+        Hello! How can I help you today?
+      </div>
+
+    </div>
+    <div class="chatbot-input-area">
+
+      <input
+        type="text"
+        id="user-input"
+        placeholder="Type your message..."
+        onkeypress="handleKey(event)"
+      >
+
+      <button onclick="sendMessage()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+
+    </div>
+
+  </div>
+  <div class="chatbot-toggle" onclick="toggleChat()">
+    <i class="fa-solid fa-comment"></i>
+  </div>
+
+  <script>
+    function toggleChat() {
+
+      const chatbot =
+        document.getElementById("chatbot");
+
+      chatbot.style.display =
+        chatbot.style.display === "flex"
+        ? "none"
+        : "flex";
+    }
+    async function sendMessage() {
+
+      const inputField =
+        document.getElementById("user-input");
+
+      const userMessage =
+        inputField.value.trim();
+
+      if(userMessage === "") return;
+      appendMessage("user", userMessage);
+      inputField.value = "";
+      appendMessage(
+        "bot",
+        '<i class="fa-solid fa-spinner fa-spin icon"></i>Thinking...'
+      );
+
+      try{
+        await new Promise(resolve =>
+          setTimeout(resolve, 1000)
+        );
+        const response =
+          await fetchAIResponse(userMessage);
+        removeLastBotMessage();
+        appendMessage("bot", response);
+
+      }catch(error){
+
+        removeLastBotMessage();
+
+        appendMessage(
+          "bot",
+          '<i class="fa-solid fa-circle-exclamation icon"></i>Something went wrong.'
+        );
+
+        console.log(error);
+      }
+    }
+    function appendMessage(sender, text){
+
+      const messagesContainer =
+        document.getElementById("chat-messages");
+
+      const message =
+        document.createElement("div");
+
+      message.classList.add("message", sender);
+      message.innerHTML = text;
+
+      messagesContainer.appendChild(message);
+      messagesContainer.scrollTop =
+        messagesContainer.scrollHeight;
+    }
+    function removeLastBotMessage(){
+
+      const botMessages =
+        document.querySelectorAll(".message.bot");
+
+      if(botMessages.length > 0){
+
+        botMessages[
+          botMessages.length - 1
+        ].remove();
+      }
+    }
+    function handleKey(event){
+
+      if(event.key === "Enter"){
+        sendMessage();
+      }
+    }
+    async function fetchAIResponse(userMessage){
+
+      const msg =
+        userMessage.toLowerCase();
+      if(msg.includes("hello") || msg.includes("hi")){
+        return '<i class="fa-solid fa-hand icon"></i>Hello! Nice to meet you.';
+      }
+      if(msg.includes("good morning")){
+        return '<i class="fa-solid fa-sun icon"></i>Good Morning! Have a wonderful day!';
+      }
+      if(msg.includes("good night")){
+        return '<i class="fa-solid fa-moon icon"></i>Good Night! Sweet dreams!';
+      }
+      if(msg.includes("how are you")){
+        return '<i class="fa-solid fa-face-smile icon"></i>I am doing great! How about you?';
+      }
+      if(msg.includes("your name")){
+        return '<i class="fa-solid fa-robot icon"></i>I am your AI Assistant.';
+      }
+      if(msg.includes("who made you")){
+        return '<i class="fa-solid fa-code icon"></i>I was created by a smart developer like you!';
+      }
+      if(msg.includes("want more information about the website")){
+        return 'Yeah sure why not,lets go.';
+      }
+      if(msg.includes("what can you do")){
+        return '<i class="fa-solid fa-bolt icon"></i>I can chat, answer questions, and help with coding.';
+      }
+      if(msg.includes("time")){
+        return '<i class="fa-solid fa-clock icon"></i>Current Time: ' +
+          new Date().toLocaleTimeString();
+      }
+      if(msg.includes("date")){
+        return '<i class="fa-solid fa-calendar icon"></i>Today\'s Date: ' +
+          new Date().toLocaleDateString();
+      }
+      if(msg.includes("joke")){
+        return '<i class="fa-solid fa-face-laugh icon"></i>Why do programmers love dark mode? Because light attracts bugs!';
+      }
+      if(msg.includes("motivate")){
+        return '<i class="fa-solid fa-fire icon"></i>Keep going! Success comes from consistency.';
+      }
+      if(msg.includes("html")){
+        return '<i class="fa-solid fa-code icon"></i>HTML is used to structure web pages.';
+      }
+      if(msg.includes("css")){
+        return '<i class="fa-solid fa-palette icon"></i>CSS is used to style websites.';
+      }
+      if(msg.includes("javascript")){
+        return '<i class="fa-brands fa-js icon"></i>JavaScript makes websites interactive.';
+      }
+      if(msg.includes("python")){
+        return '<i class="fa-brands fa-python icon"></i>Python is a powerful programming language.';
+      }
+      if(msg.includes("weather")){
+        return '<i class="fa-solid fa-cloud icon"></i>I cannot check live weather yet.';
+      }
+      if(msg.includes("thank")){
+        return '<i class="fa-solid fa-heart icon"></i>You are welcome!';
+      }
+      if(msg.includes("bye")){
+        return '<i class="fa-solid fa-hand-peace icon"></i>Goodbye! Have a great day!';
+      }
+      return '<i class="fa-solid fa-robot icon"></i>Sorry, I do not understand that yet.';
+    }
+
+  </script>
+
+</body>
+</html>
 </body>
 </html>
 
