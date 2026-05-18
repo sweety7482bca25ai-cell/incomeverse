@@ -675,6 +675,464 @@
         </div>
     </div>
 </footer>
+     <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chatbot</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:#f3f3f3;
+      height:100vh;
+    }
+.chatbot-toggle{
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  
+  background:linear-gradient(135deg,#0078ff,#00c6ff);
+  
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:28px;
+  cursor:pointer;
+
+  box-shadow:
+    0 10px 25px rgba(0,120,255,0.45),
+    0 0 20px rgba(0,198,255,0.35);
+
+  transition:0.35s ease;
+
+  z-index:1000;
+
+  animation:floatButton 3s ease-in-out infinite;
+
+  border:2px solid rgba(255,255,255,0.25);
+
+  backdrop-filter:blur(10px);
+}
+.chatbot-toggle:hover{
+  transform:translateY(-5px) scale(1.08);
+
+  box-shadow:
+    0 15px 35px rgba(0,120,255,0.55),
+    0 0 25px rgba(0,198,255,0.5);
+
+  background:linear-gradient(135deg,#0066ff,#00d4ff);
+}
+@keyframes floatButton{
+  0%{
+    transform:translateY(0px);
+  }
+
+  50%{
+    transform:translateY(-8px);
+  }
+
+  100%{
+    transform:translateY(0px);
+  }
+}
+.chatbot-toggle i{
+  text-shadow:
+    0 0 10px rgba(255,255,255,0.8),
+    0 0 20px rgba(255,255,255,0.4);
+}
+
+    .chatbot-toggle:hover{
+      background:#005fd1;
+      transform:scale(1.05);
+    }
+    .chatbot-container{
+      position:fixed;
+      bottom:95px;
+      right:25px;
+      width:350px;
+      height:500px;
+      background:white;
+      border-radius:16px;
+      overflow:hidden;
+      display:none;
+      flex-direction:column;
+      box-shadow:0 5px 20px rgba(0,0,0,0.2);
+      z-index:1000;
+    }
+    .chatbot-header{
+      background:#0078ff;
+      color:white;
+      padding:15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:18px;
+      font-weight:bold;
+    }
+
+    .close-btn{
+      background:none;
+      border:none;
+      color:white;
+      font-size:22px;
+      cursor:pointer;
+    }
+    .chatbot-messages{
+      flex:1;
+      padding:15px;
+      overflow-y:auto;
+      background:#f8f9fa;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .message {
+      padding:10px 14px;
+      border-radius:18px;
+      max-width:85%;
+      line-height:1.5;
+      word-wrap:break-word;
+      font-size:14px;
+    }
+
+    .user{
+      align-self:flex-end;
+      background:#0078ff;
+      color:white;
+      border-bottom-right-radius:5px;
+    }
+
+    .bot{
+      align-self:flex-start;
+      background:#e5e5ea;
+      color:black;
+      border-bottom-left-radius:5px;
+    }
+    .chatbot-input-area{
+      display:flex;
+      border-top:1px solid #ddd;
+      background:white;
+    }
+
+    .chatbot-input-area input{
+      flex:1;
+      padding:14px;
+      border:none;
+      outline:none;
+      font-size:14px;
+    }
+
+    .chatbot-input-area button{
+      border:none;
+      background:#0078ff;
+      color:white;
+      padding:0 20px;
+      cursor:pointer;
+      transition:0.3s;
+      font-weight:bold;
+      font-size:16px;
+    }
+
+    .chatbot-input-area button:hover{
+      background:#005fd1;
+    }
+    .icon{
+      margin-right:6px;
+    }
+    @media(max-width:480px){
+      .chatbot-container{
+        width:95%;
+        right:2.5%;
+        height:85vh;
+      }
+    }
+.chat-popup{
+  position: fixed;
+  bottom: 105px;
+  right: 25px;
+  width: 240px;
+  background: white;
+  padding: 18px 20px;
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+.popup-text{
+  font-size: 15px;
+  color: #222;
+  font-weight: 500;
+}
+
+.popup-close{
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #444;
+}
+
+.popup-close:hover{
+  color: black;
+}
+.chatbot-toggle{
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: #111;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.chatbot-toggle:hover{
+  transform: scale(1.05);
+  background: #000;
+}
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+  </style>
+</head>
+
+<body>
+<div class="chat-popup" id="chatPopup">
+  <span class="popup-text">👋 Questions? Chat Live!</span>
+
+  <button class="popup-close" onclick="closePopup()">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+<div class="chatbot-container" id="chatbot">
+
+  <div class="chatbot-header">
+    <span>
+      <i class="fa-solid fa-robot"></i>
+      AI Assistant
+    </span>
+
+    <button class="close-btn" onclick="toggleChat()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="chatbot-messages" id="chat-messages">
+    <div class="message bot">
+      <i class="fa-solid fa-hand icon"></i>
+      Hello! How can I help you today?
+    </div>
+  </div>
+
+  <div class="chatbot-input-area">
+    <input
+      type="text"
+      id="user-input"
+      placeholder="Type your message..."
+      onkeypress="handleKey(event)"
+    >
+
+    <button onclick="sendMessage()">
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+  </div>
+
+</div>
+  <div class="chatbot-toggle" onclick="toggleChat()">
+    <i class="fa-solid fa-comment"></i>
+  </div>
+
+  <script>
+    function toggleChat() {
+      const chatbot = document.getElementById("chatbot");
+      chatbot.style.display = chatbot.style.display === "flex" ? "none" : "flex";
+    }
+    async function sendMessage() {
+      const inputField = document.getElementById("user-input");
+      const userMessage = inputField.value.trim();
+
+      if(userMessage === "") return;
+      appendMessage("user", userMessage);
+      inputField.value = "";
+      appendMessage(
+        "bot",
+        '<i class="fa-solid fa-spinner fa-spin icon"></i>Thinking...'
+      );
+
+      try{
+        await new Promise(resolve => setTimeout(resolve, 800));
+        const response = await fetchAIResponse(userMessage);
+        removeLastBotMessage();
+        appendMessage("bot", response);
+
+      }catch(error){
+        removeLastBotMessage();
+        appendMessage(
+          "bot",
+          '<i class="fa-solid fa-circle-exclamation icon"></i>Something went wrong.'
+        );
+        console.log(error);
+      }
+    }
+    function appendMessage(sender, text){
+      const messagesContainer = document.getElementById("chat-messages");
+      const message = document.createElement("div");
+
+      message.classList.add("message", sender);
+      message.innerHTML = text;
+
+      messagesContainer.appendChild(message);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+    function removeLastBotMessage(){
+      const botMessages = document.querySelectorAll(".message.bot");
+      if(botMessages.length > 0){
+        botMessages[botMessages.length - 1].remove();
+      }
+    }
+    function handleKey(event){
+      if(event.key === "Enter"){
+        sendMessage();
+      }
+    }
+    function closePopup(){
+  document.getElementById("chatPopup").style.display = "none";
+}
+    async function fetchAIResponse(userMessage){
+      const msg = userMessage.toLowerCase().trim();
+      if(msg.includes("hello") || msg.includes("hi")){
+        return '<i class="fa-solid fa-hand icon"></i>Hello! Nice to meet you.';
+      }
+      if(msg.includes("good morning")){
+        return '<i class="fa-solid fa-sun icon"></i>Good Morning! Have a wonderful day!';
+      }
+      if(msg.includes("good night")){
+        return '<i class="fa-solid fa-moon icon"></i>Good Night! Sweet dreams!';
+      }
+      if(msg.includes("how are you")){
+        return '<i class="fa-solid fa-face-smile icon"></i>I am doing great! How about you?';
+      }
+      if(msg.includes("your name")){
+        return '<i class="fa-solid fa-robot icon"></i>I am your AI Assistant.';
+      }
+      if(msg.includes("who made you")){
+        return '<i class="fa-solid fa-code icon"></i>I was created by a smart developer like you!';
+      }
+      if(msg.includes("want more information about the website")){
+        return 'Sure! Let\'s check out the details.';
+      }
+      if(msg.includes("what can you do")){
+        return '<i class="fa-solid fa-bolt icon"></i>I can chat, answer questions, and explain modern freelance career paths.';
+      }
+      if(msg.includes("what is freelancing")){
+        return '<b><i class="fa-solid fa-briefcase icon"></i>What is Freelancing?</b><br><br>Freelancing is a form of self-employment where individuals offer their services to multiple clients on a per-project or contract basis, rather than being permanently employed by a single company.';
+      }
+      if(msg.includes("earn through freelancing") || msg.includes("earn from freelancing")){
+        return '<b><i class="fa-solid fa-wallet icon"></i>How to Earn via Freelancing:</b><br><br>1. Create professional profiles on global platforms like Upwork, Fiverr, or Freelancer.com.<br>2. Build and display a solid portfolio showcasing your primary skills (e.g., development, design, writing).<br>3. Submit proposals or bids on client postings, successfully deliver the milestones, and secure direct payments.';
+      }
+      if(msg.includes("what is video editing") || msg.includes("what is vedio editing")){
+        return '<b><i class="fa-solid fa-video icon"></i>What is Video Editing?</b><br><br>Video editing is the process of arranging, modifying, and assembling raw video clips, audio tracks, color grading, and visual effects into a cohesive, engaging narrative or presentation using professional tools like Adobe Premiere Pro, DaVinci Resolve, or CapCut.';
+      }
+      if(msg.includes("earn through video editing") || msg.includes("earn through vedio editing")){
+        return '<b><i class="fa-solid fa-dollar-sign icon"></i>How to Earn via Video Editing:</b><br><br>1. Offer specialized services editing short-form content (Reels/TikToks/Shorts) or high-retention long-form videos for YouTube content creators.<br>2. Create promotional advertisements, real estate video tours, and product showcases for corporate businesses.<br>3. Pitch directly to overseas brands via LinkedIn or freelance marketplaces.';
+      }
+      if(msg.includes("what is digital teaching") || msg.includes("what is digital taeching") || msg.includes("online teaching")){
+        return '<b><i class="fa-solid fa-chalkboard-user icon"></i>What is Digital Teaching?</b><br><br>Digital teaching refers to delivering educational lectures, training programs, or academic tutoring remotely using online interactive platforms (such as Zoom, Microsoft Teams, or Google Meet) and learning management systems.';
+      }
+      if(msg.includes("earn through teaching") || msg.includes("earn through digital teaching")){
+        return '<b><i class="fa-solid fa-graduation-cap icon"></i>How to Earn via Online Teaching:</b><br><br>1. Create pre-recorded technical or creative masterclasses and publish them on marketplace platforms like Udemy or Skillshare.<br>2. Provide premium 1-on-1 virtual coaching or cohort-based live classes for high-demand subjects like coding or language skills.<br>3. Launch an educational YouTube channel to build authority, monetize via ads, and secure sponsorships.';
+      }
+      if(msg.includes("what is ai and automation") || msg.includes("what is ai")){
+        return '<b><i class="fa-solid fa-microchip icon"></i>What is AI & Automation?</b><br><br>AI and Automation involve leveraging artificial intelligence models and workflow logic scripts to execute routine business tasks automatically (e.g., sorting databases, auto-responding to leads, syncing customer data) without requiring constant human intervention.';
+      }
+      if(msg.includes("earn through ai") || msg.includes("earn through automation")){
+        return '<b><i class="fa-solid fa-bolt icon"></i>How to Earn via AI & Automation:</b><br><br>1. Set up automated customer management pipelines and custom AI chatbots for small local businesses using tools like Zapier or Make.com.<br>2. Build a specialized consulting agency that helps corporate departments automate their document processing and scheduling workflows.<br>3. Offer prompt engineering and generative content refinement services.';
+      }
+      if(msg.includes("what is trading")){
+        return '<b><i class="fa-solid fa-chart-line icon"></i>What is Trading?</b><br><br>Trading is the practice of purchasing and selling financial instruments (such as stocks, cryptocurrencies, or forex pairs) over relatively short time frames to profit from price fluctuations based on technical chart analysis and market trends.';
+      }
+      if(msg.includes("earn through trading") || msg.includes("earn throgh trading") ){
+        return '<b><i class="fa-solid fa-money-bill-trend-up icon"></i>How to Earn via Trading:</b><br><br>1. Thoroughly master technical analysis, candlestick price action, and support/resistance strategies using a simulated demo account.<br>2. Participate in structured day trading or swing trading models with rigorous emotional discipline.<br>3. Maintain strict risk-management parameters (like stop-loss orders) to keep potential losses controlled.';
+      }
+      if(msg.includes("what is social media") || msg.includes("what is socail media")){
+        return '<b><i class="fa-solid fa-share-nodes icon"></i>What is Social Media?</b><br><br>Social Media refers to online networking applications (such as Instagram, LinkedIn, YouTube, and Facebook) that enable interactive user communications, content creation, brand building, and targeted corporate audience engagement.';
+      }
+      if(msg.includes("earn through social media") || msg.includes("earn through socail media")){
+        return '<b><i class="fa-solid fa-rectangle-ad icon"></i>How to Earn via Social Media:</b><br><br>1. <b>Social Media Management (SMM):</b> Handle content strategy, post calendars, and community engagement for local or international brands.<br>2. <b>Affiliate Marketing:</b> Promote niche-specific product solutions and software systems through organic content tracking links to earn recurring commissions.<br>3. <b>Brand Partnerships:</b> Build a strong personal brand following to monetize via direct corporate sponsorship deals.';
+      }
+      if(msg.includes("time")){
+        return '<i class="fa-solid fa-clock icon"></i>Current Time: ' + new Date().toLocaleTimeString();
+      }
+      if(msg.includes("date")){
+        return '<i class="fa-solid fa-calendar icon"></i>Today\'s Date: ' + new Date().toLocaleDateString();
+      }
+      if(msg.includes("joke")){
+        return '<i class="fa-solid fa-face-laugh icon"></i>Why do programmers love dark mode? Because light attracts bugs!';
+      }
+      if(msg.includes("motivate")){
+        return '<i class="fa-solid fa-fire icon"></i>Keep going! Success comes from consistency and daily habits.';
+      }
+      if(msg.includes("html")){
+        return '<i class="fa-solid fa-code icon"></i>HTML is used to structure web pages.';
+      }
+      if(msg.includes("css")){
+        return '<i class="fa-solid fa-palette icon"></i>CSS is used to style websites.';
+      }
+      if(msg.includes("javascript")){
+        return '<i class="fa-brands fa-js icon"></i>JavaScript makes websites interactive.';
+      }
+      if(msg.includes("python")){
+        return '<i class="fa-brands fa-python icon"></i>Python is a powerful programming language.';
+      }
+      if(msg.includes("weather")){
+        return '<i class="fa-solid fa-cloud icon"></i>I cannot check live weather reports yet.';
+      }
+      if(msg.includes("thank")){
+        return '<i class="fa-solid fa-heart icon"></i>You are very welcome!';
+      }
+      if(msg.includes("bye")){
+        return '<i class="fa-solid fa-hand-peace icon"></i>Goodbye! Have a great day ahead!';
+      }
+      return '<i class="fa-solid fa-robot icon"></i>I\'m sorry, I don\'t have an answer for that yet. Feel free to ask about freelancing, video editing, social media, trading, digital teaching, or AI automation!';
+    }
+  </script>
+
+</body>
+</html> 
 </body>
 </html>
 
