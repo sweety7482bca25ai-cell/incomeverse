@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Earning Dashboard</title>
+    <title>Student Earning & Schedule Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         :root {
             --bg-color: #f4f7f6;
@@ -14,6 +15,7 @@
             --primary-color: #6366f1;
             --success-color: #10b981;
             --card-bg: #ffffff;
+            --danger-color: #ef4444;
         }
 
         * {
@@ -26,36 +28,44 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
+            overflow-x: hidden;
         }
-
-        .dashboard-container {
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 260px;
-            background-color: var(--sidebar-color);
-            color: #fff;
-            padding: 2rem 1.5rem;
-        }
-
-        .sidebar .logo h2 {
-            font-size: 1.5rem;
-            margin-bottom: 2.5rem;
-            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
-            color: var(--primary-color);
+            z-index: 9999;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        .sidebar nav ul {
-            list-style: none;
+        .login-box {
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
         }
 
-        .sidebar nav ul li {
-            margin-bottom: 1rem;
-        }
-
+        .login-box i { font-size: 3.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+        .login-box h2 { color: #0f172a; margin-bottom: 0.5rem; }
+        .login-box p { color: #64748b; margin-bottom: 2rem; font-size: 0.95rem; }
+        .login-box input { width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; outline: none; }
+        .login-box button { width: 100%; padding: 1rem; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        .hide-login { opacity: 0; pointer-events: none; transform: scale(0.9); }
+        .dashboard-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background-color: var(--sidebar-color); color: #fff; padding: 2rem 1.5rem; }
+        .sidebar .logo h2 { font-size: 1.5rem; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 10px; color: var(--primary-color); }
+        .sidebar nav ul { list-style: none; }
+        .sidebar nav ul li { margin-bottom: 1rem; }
+        
         .sidebar nav ul li a {
             color: #94a3b8;
             text-decoration: none;
@@ -65,313 +75,314 @@
             padding: 0.8rem 1rem;
             border-radius: 8px;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .sidebar nav ul li a:hover, 
-        .sidebar nav ul li.active a {
+        .sidebar nav ul li.active a, .sidebar nav ul li a:hover {
             background-color: var(--primary-color);
             color: #fff;
         }
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
-        }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        header h1 {
-            font-size: 1.8rem;
-            color: #0f172a;
-        }
-
-        header p {
-            color: #64748b;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .notification-icon {
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #64748b;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
+        .main-content { flex: 1; padding: 2rem; overflow-y: auto; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        header h1 { font-size: 1.8rem; color: #0f172a; }
+        header p { color: #64748b; }
+        .avatar { width: 40px; height: 40px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+        .tab-content { display: none; }
+        .tab-content.active-tab { display: block; }
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background-color: var(--card-bg); padding: 1.5rem; border-radius: 12px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .card-icon { width: 50px; height: 50px; border-radius: 10px; background-color: #e0e7ff; color: var(--primary-color); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; }
+        .card-icon.money { background-color: #d1fae5; color: var(--success-color); }
+        .card-icon.courses { background-color: #ccfbf1; color: #0d9488; }
+        .card-info h3 { font-size: 1.6rem; color: #0f172a; }
+        .card-info p { color: #64748b; font-size: 0.9rem; }
+        .drawer-btn {
             background-color: var(--primary-color);
             color: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-        }
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 12px;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            gap: 8px;
+            transition: background 0.2s;
         }
-
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #e0e7ff;
-            color: var(--primary-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-        }
-
-        .card-icon.money {
-            background-color: #d1fae5;
-            color: var(--success-color);
-        }
-
-        .card-icon.completed {
-            background-color: #ffedd5;
-            color: #f97316;
-        }
-
-        .card-info h3 {
-            font-size: 1.6rem;
-            color: #0f172a;
-        }
-
-        .card-info p {
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 1024px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .grid-item {
-            background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        .grid-item h3 {
-            margin-bottom: 1.5rem;
-            color: #0f172a;
-        }
-        .skill-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-
-        .skill-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-info i {
-            margin-right: 8px;
-            color: var(--primary-color);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress {
+        .drawer-btn:hover { background-color: #4f46e5; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        
+        .grid-item { background-color: var(--card-bg); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .grid-item h3 { margin-bottom: 1.5rem; color: #0f172a; display: flex; justify-content: space-between; align-items: center; }
+        .todo-list { display: flex; flex-direction: column; gap: 10px; list-style: none; }
+        .todo-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 4px solid var(--primary-color); }
+        .todo-item.completed-item { border-left-color: var(--success-color); background: #f0fdf4; opacity: 0.75; }
+        .todo-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--success-color); }
+        .todo-text { font-size: 0.95rem; font-weight: 500; color: #334155; }
+        .todo-item.completed-item .todo-text { text-decoration: line-through; color: #64748b; }
+        .todo-day { margin-left: auto; font-size: 0.8rem; background: #e2e8f0; padding: 2px 8px; border-radius: 12px; color: #475569; }
+        .side-drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 420px;
+            max-width: 95%;
             height: 100%;
-            background-color: var(--primary-color);
-            border-radius: 4px;
-            transition: width 0.5s ease-in-out;
+            background: #ffffff;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+            z-index: 10000;
+            padding: 2rem;
+            overflow-y: auto;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .side-drawer.open { right: 0; }
+
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0; }
+        .drawer-header h2 { color: #0f172a; font-size: 1.3rem; }
+        .close-drawer-btn { background: none; border: none; font-size: 1.4rem; color: #64748b; cursor: pointer; }
+        .mini-course-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; }
+        .mini-course-title { font-weight: 600; color: #0f172a; font-size: 0.95rem; display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .mini-course-cost { color: var(--success-color); font-weight: bold; }
+        .progress-bar { width: 100%; height: 6px; background-color: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+        .progress { height: 100%; background-color: var(--primary-color); border-radius: 4px; }
+        .drawer-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            z-index: 9999;
+            display: none;
+        }
+        .drawer-backdrop.show { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
+        th { background-color: #f8fafc; color: #64748b; font-weight: 600; }
+        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
+        .status-badge.done { background-color: #d1fae5; color: #065f46; }
+        .status-badge.pending { background-color: #fef3c7; color: #92400e; }
     </style>
 </head>
 <body>
+    <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>Welcome Student!</h2>
+            <p>Apna naam enter karein aur freelancing journey track karein.</p>
+            <input type="text" id="userNameInput" placeholder="Enter your name here..." required>
+            <button onclick="enterDashboard()">Enter Dashboard</button>
+        </div>
+    </div>
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="logo">
-                <h2><i class="fa-solid fa-graduation-cap"></i> EarnHub</h2>
+                <h2><i class="fa-solid fa-bolt"></i> EarnHub</h2>
             </div>
             <nav>
                 <ul>
-                    <li class="active"><a href="#"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fa-solid fa-book-open"></i> My Courses</a></li>
-                    <li><a href="#"><i class="fa-solid fa-wallet"></i> Earnings</a></li>
-                    <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                    <li id="menu-home" class="menu-item active" onclick="switchTab('home')"><a><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                    <li id="menu-earnings" class="menu-item" onclick="switchTab('earnings')"><a><i class="fa-solid fa-wallet"></i> Earnings</a></li>
+                    <li><a onclick="logout()"><i class="fa-solid fa-sign-out-alt"></i> Exit App</a></li>
                 </ul>
             </nav>
         </aside>
         <main class="main-content">
             <header>
                 <div class="welcome-text">
-                    <h1>Welcome Back, Student!</h1>
-                    <p>Track your learning progress and start earning.</p>
+                    <h1>Welcome Back, <span id="dashName">Student</span>!</h1>
+                    <p id="dynamicSubtext">Track your custom freelance tasks and progress schedule.</p>
                 </div>
                 <div class="user-profile">
-                    <i class="fa-solid fa-bell notification-icon"></i>
-                    <div class="avatar">S</div>
+                    <div class="avatar" id="dashAvatar">U</div>
                 </div>
             </header>
-            <section class="stats-container">
-                <div class="card">
-                    <div class="card-icon"><i class="fa-solid fa-hourglass-half"></i></div>
-                    <div class="card-info">
-                        <h3>65%</h3>
-                        <p>Overall Progress</p>
+            <div id="tab-home" class="tab-content active-tab">
+                <section class="stats-container">
+                    <div class="card">
+                        <div class="card-icon"><i class="fa-solid fa-list-check"></i></div>
+                        <div class="card-info"><h3 id="scheduleCount">0%</h3><p>Weekly Schedule Done</p></div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-icon money"><i class="fa-solid fa-dollar-sign"></i></div>
-                    <div class="card-info">
-                        <h3>$240</h3>
-                        <p>Estimated Earnings</p>
+                    <div class="card" style="cursor:pointer;" onclick="switchTab('earnings')">
+                        <div class="card-icon money"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                        <div class="card-info"><h3>₹18,500</h3><p>Total Income Made</p></div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-icon completed"><i class="fa-solid fa-certificate"></i></div>
-                    <div class="card-info">
-                        <h3>2 / 6</h3>
-                        <p>Skills Mastered</p>
+                    <div class="card">
+                        <div class="card-icon courses"><i class="fa-solid fa-book-bookmark"></i></div>
+                        <div class="card-info"><h3>4 / 6</h3><p>Active Courses</p></div>
                     </div>
-                </div>
-            </section>
-            <section class="dashboard-grid">
-                <div class="grid-item chart-card">
-                    <h3>Weekly Study Hours</h3>
-                    <div style="position: relative; height:300px; width:100%;">
-                        <canvas id="progressChart"></canvas>
-                    </div>
-                </div>
-                <div class="grid-item progress-card">
-                    <h3>Topic-wise Progress</h3>
-                    <div class="skill-list">
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span><i class="fa-solid fa-video"></i> Video Editing</span>
-                                <span>80%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress" style="width: 80%;"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span><i class="fa-solid fa-briefcase"></i> Freelancing Basics</span>
-                                <span>95%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress" style="width: 95%;"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span><i class="fa-solid fa-robot"></i> AI Tools Monetization</span>
-                                <span>40%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress" style="width: 40%;"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span><i class="fa-solid fa-chart-line"></i> Trading 101</span>
-                                <span>15%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress" style="width: 15%;"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span><i class="fa-solid fa-share-nodes"></i> Social Media Growth</span>
-                                <span>60%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress" style="width: 60%;"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span><i class="fa-solid fa-chalkboard-user"></i> Online Teaching</span>
-                                <span>0%</span>
-                            </div>
-                            <div class="progress-bar"><div class="progress" style="width: 0%;"></div></div>
+                </section>
+                <div class="dashboard-grid">
+                    <div class="grid-item">
+                        <h3>Weekly Activity Status</h3>
+                        <div style="position: relative; height:240px; width:100%;">
+                            <canvas id="progressChart"></canvas>
                         </div>
                     </div>
+                    <div class="grid-item">
+                        <h3>Weekly Schedule <button class="drawer-btn" onclick="openDrawer()"><i class="fa-solid fa-layer-group"></i> Course List</button></h3>
+                        <ul class="todo-list" id="todoContainer">
+                        </ul>
+                    </div>
                 </div>
-            </section>
+            </div>
+            <div id="tab-earnings" class="tab-content">
+                <section class="stats-container">
+                    <div class="card"><div class="card-icon money"><i class="fa-solid fa-wallet"></i></div><div class="card-info"><h3>₹12,000</h3><p>Withdrawn to Bank</p></div></div>
+                    <div class="card"><div class="card-icon" style="background: #e0f2fe; color:#0284c7;"><i class="fa-solid fa-clock"></i></div><div class="card-info"><h3>₹6,500</h3><p>Pending Clearance</p></div></div>
+                </section>
+
+                <div class="grid-item">
+                    <h3>Recent Client Work Orders</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Work Platform / Client</th><th>Skill Category</th><th>Amount Received</th><th>Payout Status</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Fiverr Client (US)</td><td>Video Editing (Reels)</td><td>₹8,000</td><td><span class="status-badge done">Cleared</span></td></tr>
+                            <tr><td>Local Business Branding</td><td>Social Media Growth</td><td>₹4,000</td><td><span class="status-badge done">Cleared</span></td></tr>
+                            <tr><td>Upwork Contract</td><td>AI Tool Content Setup</td><td>₹6,500</td><td><span class="status-badge pending">In Escrow</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </main>
     </div>
+    <div class="side-drawer" id="courseDrawer">
+        <div class="drawer-header">
+            <h2><i class="fa-solid fa-book"></i> Course Blueprint List</h2>
+            <button class="close-drawer-btn" onclick="closeDrawer()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="drawerCoursesContainer">
+        </div>
+    </div>
     <script>
+        const coursesData = [
+            { name: "Freelancing Basics", cost: "₹1,499", progress: 95 },
+            { name: "Video Editing Masters", cost: "₹3,999", progress: 80 },
+            { name: "Social Media Growth", cost: "₹2,499", progress: 60 },
+            { name: "AI Tools Automation", cost: "₹1,999", progress: 40 },
+            { name: "Trading 101 Basics", cost: "₹4,999", progress: 15 },
+            { name: "Online Teaching Guide", cost: "₹999", progress: 0 }
+        ];
+
+        const scheduleTasks = [
+            { text: "Complete Premiere Pro Cut transitions", day: "Mon", checked: true },
+            { text: "Create Upwork and Fiverr Profile portfolio", day: "Tue", checked: true },
+            { text: "Watch 3 Video Tutorials on Midjourney AI", day: "Wed", checked: false },
+            { text: "Analyze 5 Chart Patterns on Trading Demo Account", day: "Thu", checked: false },
+            { text: "Draft Instagram Content Calendar for Dummy Client", day: "Fri", checked: false },
+            { text: "Teach first mock session online on Zoom", day: "Sat", checked: false }
+        ];
         document.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('studentHubName');
+            if (savedName) setupDashboard(savedName);
+
+            renderDrawerCourses();
+            renderScheduleList();
+            initChart();
+        });
+        function openDrawer() {
+            document.getElementById('courseDrawer').classList.add('open');
+            document.getElementById('drawerBackdrop').classList.add('show');
+        }
+
+        function closeDrawer() {
+            document.getElementById('courseDrawer').classList.remove('open');
+            document.getElementById('drawerBackdrop').classList.remove('show');
+        }
+        function renderDrawerCourses() {
+            const container = document.getElementById('drawerCoursesContainer');
+            container.innerHTML = '';
+
+            coursesData.forEach(c => {
+                container.innerHTML += `
+                    <div class="mini-course-card">
+                        <div class="mini-course-title">
+                            <span>${c.name}</span>
+                            <span class="mini-course-cost">${c.cost}</span>
+                        </div>
+                        <div style="font-size:0.8rem; color:#64748b;">Progress: ${c.progress}%</div>
+                        <div class="progress-bar"><div class="progress" style="width: ${c.progress}%;"></div></div>
+                    </div>
+                `;
+            });
+        }
+        function renderScheduleList() {
+            const container = document.getElementById('todoContainer');
+            container.innerHTML = ''; 
+            let doneCount = 0;
+
+            scheduleTasks.forEach((task, index) => {
+                if(task.checked) doneCount++;
+                const isCheckedAttr = task.checked ? 'checked' : '';
+                const completedClass = task.checked ? 'completed-item' : '';
+
+                container.innerHTML += `
+                    <li class="todo-item ${completedClass}">
+                        <input type="checkbox" ${isCheckedAttr} onchange="toggleTask(${index})">
+                        <span class="todo-text">${task.text}</span>
+                        <span class="todo-day">${task.day}</span>
+                    </li>
+                `;
+            });
+
+            const percentage = Math.round((doneCount / scheduleTasks.length) * 100);
+            document.getElementById('scheduleCount').innerText = `${percentage}%`;
+        }
+
+        function toggleTask(index) {
+            scheduleTasks[index].checked = !scheduleTasks[index].checked;
+            renderScheduleList();
+        }
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+
+            document.getElementById(`tab-${tabName}`).classList.add('active-tab');
+            document.getElementById(`menu-${tabName}`).classList.add('active');
+        }
+
+        function enterDashboard() {
+            const name = document.getElementById('userNameInput').value.trim();
+            if (name === "") { alert("Kindly mention your name!"); return; }
+            localStorage.setItem('studentHubName', name);
+            setupDashboard(name);
+        }
+
+        function setupDashboard(name) {
+            document.getElementById('dashName').innerText = name;
+            document.getElementById('dashAvatar').innerText = name.charAt(0);
+            document.getElementById('loginOverlay').classList.add('hide-login');
+        }
+
+        function logout() {
+            localStorage.removeItem('studentHubName');
+            window.location.reload();
+        }
+
+        function initChart() {
             const ctx = document.getElementById('progressChart').getContext('2d');
-            
-            const progressChart = new Chart(ctx, {
+            new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                     datasets: [{
-                        label: 'Study Time (Hours)',
-                        data: [1.5, 2, 0.5, 3, 1.8, 4, 2.5],
+                        label: 'Study Hours Spent',
+                        data: [2, 3.5, 1, 4.2, 2.5, 5, 3],
                         borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.06)',
                         borderWidth: 3,
-                        tension: 0.4,
-                        fill: true,
-                        pointBackgroundColor: '#6366f1'
+                        tension: 0.3,
+                        fill: true
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: '#e2e8f0'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
-        });
+        }
     </script>
 </body>
-</html>
+</html>  
