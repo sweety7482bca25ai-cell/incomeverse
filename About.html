@@ -569,29 +569,35 @@
 </style>
 </head>
 <body>
-    <nav>
-        <a href="index.html" class="logo"><i class="fas fa-globe"></i> IncomeVerse</a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="About.html">About</a>
-            <a href="Income_Path.html">Income Path</a>
-            <a href="Cards.html">Skills</a>
-            <a href="Reviews.html">Reviews</a>
-        </div>
-        <div class="auth-buttons">
-            <a href="signin.html" class="login">Sign In</a>
-           <a href="join.html" class="signup-link">
-                <a href="Dashboard.html" class="signup-link">
-    <button class="signup-btn">
-        Join Now <i class="fas fa-arrow-right"></i>
-    </button>
-</a>
-               <button class="signup-btn">
-       Dashboard
-    </button>
-        </div>
-    </nav>
+     <nav>
+    <a href="index.html" class="logo">
+        <i class="fas fa-globe"></i> IncomeVerse
+    </a>
 
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="About.html">About</a>
+        <a href="Income_Path.html">Income Path</a>
+        <a href="Cards.html">Skills</a>
+        <a href="Reviews.html">Reviews</a>
+    </div>
+
+    <div class="auth-buttons">
+
+        <a href="signin.html" class="login">
+            Sign In
+        </a>
+
+        <a href="join.html" class="signup-btn">
+            Join Now <i class="fas fa-arrow-right"></i>
+        </a>
+
+        <a href="Dashboard.html" class="signup-btn">
+            Dashboard
+        </a>
+
+    </div>
+</nav>
     <header class="hero-section">
         <div class="hero-content">
             <span>The Evolution of Student Finance</span>
@@ -689,7 +695,155 @@
         </div>
     </div>
 </footer>
-     <!DOCTYPE html>
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:#f3f3f3;
+      height:100vh;
+    }
+    .chatbot-toggle{
+      position:fixed;
+      bottom:25px;
+      right:25px;
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      background:#0078ff;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+      transition:0.3s;
+      z-index:1000;
+    }
+
+    .chatbot-toggle:hover{
+      background:#005fd1;
+      transform:scale(1.05);
+    }
+    .chatbot-container{
+      position:fixed;
+      bottom:95px;
+      right:25px;
+      width:350px;
+      height:500px;
+      background:white;
+      border-radius:16px;
+      overflow:hidden;
+      display:none;
+      flex-direction:column;
+      box-shadow:0 5px 20px rgba(0,0,0,0.2);
+      z-index:1000;
+    }
+
+    /* Header */
+    .chatbot-header{
+      background:#0078ff;
+      color:white;
+      padding:15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:18px;
+      font-weight:bold;
+    }
+
+    .close-btn{
+      background:none;
+      border:none;
+      color:white;
+      font-size:22px;
+      cursor:pointer;
+    }
+    .chatbot-messages{
+      flex:1;
+      padding:15px;
+      overflow-y:auto;
+      background:#f8f9fa;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .message{
+      padding:10px 14px;
+      border-radius:18px;
+      max-width:80%;
+      line-height:1.5;
+      word-wrap:break-word;
+      font-size:14px;
+    }
+
+    .user{
+      align-self:flex-end;
+      background:#0078ff;
+      color:white;
+      border-bottom-right-radius:5px;
+    }
+
+    .bot{
+      align-self:flex-start;
+      background:#e5e5ea;
+      color:black;
+      border-bottom-left-radius:5px;
+    }
+    .chatbot-input-area{
+      display:flex;
+      border-top:1px solid #ddd;
+      background:white;
+    }
+
+    .chatbot-input-area input{
+      flex:1;
+      padding:14px;
+      border:none;
+      outline:none;
+      font-size:14px;
+    }
+
+    .chatbot-input-area button{
+      border:none;
+      background:#0078ff;
+      color:white;
+      padding:0 20px;
+      cursor:pointer;
+      transition:0.3s;
+      font-weight:bold;
+      font-size:16px;
+    }
+
+    .chatbot-input-area button:hover{
+      background:#005fd1;
+    }
+    .icon{
+      margin-right:6px;
+    }
+    @media(max-width:480px){
+
+      .chatbot-container{
+        width:95%;
+        right:2.5%;
+        height:85vh;
+      }
+    }
+
+  </style>
+</head>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
