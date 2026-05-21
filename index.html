@@ -163,6 +163,32 @@
             transition: 0.3s;
         }
         .search-container button:hover { background: #0056b3; }
+        .suggestions {
+            max-width: 700px;
+            margin: 12px auto 0 auto;
+            padding: 10px 14px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.95);
+            color: #111;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+            display: none;
+        }
+        .suggestion-item {
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .suggestion-item:hover {
+            background: #007bff;
+            color: #fff;
+        }
+        .suggestion-item strong {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
         .badges { 
             margin-top: 40px; 
             display: flex; 
@@ -466,9 +492,10 @@
             <p>Connect with the top 1% of global talent and automate your revenue streams. <i class="fas fa-money-bill-trend-up" style="color: #007bff;"></i></p>
             
             <div class="search-container">
-                <input type="text" id="userInput" placeholder="What service are you looking for today?" onkeypress="handleKeyPress(event)">
+                <input type="text" id="userInput" placeholder="What service are you looking for today?" oninput="updateSuggestions()" onkeypress="handleKeyPress(event)">
                 <button onclick="searchService()">Search</button>
             </div>
+            <div id="suggestions" class="suggestions"></div>
 
             <div class="badges">
                 <span><i class="fas fa-check-circle"></i> Verified profiles</span>
@@ -479,35 +506,71 @@
     </section>
 
     <script>
-function searchService() {
+const services = [
+    { title: 'Freelancing', page: 'Freelancing.html', description: 'Start earning by offering skills on global marketplaces.' },
+    { title: 'Video Editing', page: 'Video_Editing.html', description: 'Learn video production and editing for creators and brands.' },
+    { title: 'Teaching', page: 'Teaching.html', description: 'Build online courses and coaching programs to monetize knowledge.' },
+    { title: 'AI Tools', page: 'AI_Tools.html', description: 'Use AI and automation to scale income-generating workflows.' },
+    { title: 'Social Media', page: 'Social_Media.html', description: 'Grow audiences and earn from content, partnerships and ads.' },
+    { title: 'Trading', page: 'Trading.html', description: 'Master trading strategies for stocks, crypto and markets.' },
+    { title: 'Skills', page: 'Cards.html', description: 'Explore skill pathways for design, tech, marketing and more.' }
+];
 
+function updateSuggestions() {
+    const input = document.getElementById('userInput').value.toLowerCase().trim();
+    const suggestionBox = document.getElementById('suggestions');
+
+    if (!input) {
+        suggestionBox.style.display = 'none';
+        suggestionBox.innerHTML = '';
+        return;
+    }
+
+    const matches = services.filter(service => {
+        return service.title.toLowerCase().includes(input) || service.description.toLowerCase().includes(input);
+    });
+
+    if (matches.length === 0) {
+        suggestionBox.style.display = 'none';
+        suggestionBox.innerHTML = '';
+        return;
+    }
+
+    suggestionBox.innerHTML = matches.map(service => 
+        `<div class="suggestion-item" onclick="selectSuggestion('${service.title}')">
+            <strong>${service.title}</strong>
+            <span>${service.description}</span>
+        </div>`
+    ).join('');
+    suggestionBox.style.display = 'block';
+}
+
+function selectSuggestion(title) {
+    const input = document.getElementById('userInput');
+    input.value = title;
+    updateSuggestions();
+}
+
+function searchService() {
     const input = document.getElementById('userInput').value.toLowerCase().trim();
 
-    if (input.includes("freelanc")) {
-        window.location.href = "Freelancing.html";
-    } 
-    else if (input.includes("skill")) {
-        window.location.href = "Cards.html";
-    } 
-    else if (input.includes("trad")) {
-        window.location.href = "Trading.html";
-    } 
-    else if (input.includes("teach")) {
-        window.location.href = "Teaching.html";
-    } 
-    else if (input.includes("video")) {
-        window.location.href = "Video_Editing.html";
-    } 
-    else if (input.includes("social")) {
-        window.location.href = "Social_Media.html";
-    } 
-    else if (input.includes("ai")) {
-        window.location.href = "AI_Tools.html";
-    } 
-    else if (input === "") {
-        alert("Please type something to search!");
-    } 
-    else {
+    if (input.includes('freelanc')) {
+        window.location.href = 'Freelancing.html';
+    } else if (input.includes('skill')) {
+        window.location.href = 'Cards.html';
+    } else if (input.includes('trad')) {
+        window.location.href = 'Trading.html';
+    } else if (input.includes('teach')) {
+        window.location.href = 'Teaching.html';
+    } else if (input.includes('video')) {
+        window.location.href = 'Video_Editing.html';
+    } else if (input.includes('social')) {
+        window.location.href = 'Social_Media.html';
+    } else if (input.includes('ai')) {
+        window.location.href = 'AI_Tools.html';
+    } else if (input === '') {
+        alert('Please type something to search!');
+    } else {
         alert("Service not found! Try searching 'freelancing','skills','Social Media','AI Tools','Video Editing','Trading' or 'Teaching'.");
     }
 }
