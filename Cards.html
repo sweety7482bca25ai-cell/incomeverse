@@ -25,9 +25,6 @@ body{
     background:linear-gradient(135deg,#020617,#111827,#1e293b);
     font-family:Arial;
 }
-
-/* ================= SCENE ================= */
-
 .scene{
     width:320px;
     height:320px;
@@ -41,9 +38,6 @@ body{
     transform-style:preserve-3d;
     animation:rotate 20s linear infinite;
 }
-
-/* ================= ROTATION ================= */
-
 @keyframes rotate{
 
     from{
@@ -55,9 +49,6 @@ body{
     }
 
 }
-
-/* ================= CARD ================= */
-
 .card{
 
     position:absolute;
@@ -74,9 +65,6 @@ body{
     transition:transform 1s ease;
 
 }
-
-/* ================= CARD INNER ================= */
-
 .card-inner{
 
     position:relative;
@@ -89,15 +77,9 @@ body{
     transition:transform 1s ease;
 
 }
-
-/* ================= FLIP ================= */
-
 .card.active .card-inner{
     transform:rotateY(180deg);
 }
-
-/* ================= FRONT + BACK ================= */
-
 .card-front,
 .card-back{
 
@@ -116,9 +98,6 @@ body{
     box-shadow:0 15px 40px rgba(0,0,0,0.5);
 
 }
-
-/* ================= FRONT ================= */
-
 .card-front{
 
     background:#000;
@@ -128,8 +107,6 @@ body{
     align-items:flex-end;
 
 }
-
-/* ================= VIDEOS ================= */
 
 .card-front iframe,
 .card-front video{
@@ -145,9 +122,6 @@ body{
     object-fit:cover;
 
 }
-
-/* ================= OVERLAY ================= */
-
 .card-front::after{
 
     content:"";
@@ -164,9 +138,6 @@ body{
     );
 
 }
-
-/* ================= TITLE ================= */
-
 .card-front span{
 
     position:relative;
@@ -189,9 +160,6 @@ body{
     backdrop-filter:blur(6px);
 
 }
-
-/* ================= BACK ================= */
-
 .card-back{
 
     background:
@@ -231,9 +199,6 @@ body{
     margin-bottom:24px;
 
 }
-
-/* ================= BUTTON ================= */
-
 .watch-btn{
 
     text-decoration:none;
@@ -257,9 +222,6 @@ body{
     transform:scale(1.08);
 
 }
-
-/* ================= ACTIVE CARD ================= */
-
 .card.active{
 
     transform:
@@ -270,9 +232,6 @@ body{
     z-index:999;
 
 }
-
-/* ================= POSITIONS ================= */
-
 .card:nth-child(1){
     transform:rotateY(0deg) translateZ(420px);
 }
@@ -300,9 +259,6 @@ body{
 .card:nth-child(7){
     transform:rotateY(306deg) translateZ(420px);
 }
-
-/* ================= MOBILE ================= */
-
 @media(max-width:768px){
 
     .scene{
@@ -420,9 +376,6 @@ nav {
 <div class="scene">
 
 <div class="carousel" id="carousel">
-
-    <!-- ================= GRAPHIC DESIGN ================= -->
-
     <div class="card" onclick="flipCard(this)">
 
         <div class="card-inner">
@@ -462,9 +415,6 @@ nav {
         </div>
 
     </div>
-
-    <!-- ================= TRADING ================= -->
-
     <div class="card" onclick="flipCard(this)">
 
         <div class="card-inner">
@@ -504,9 +454,6 @@ nav {
         </div>
 
     </div>
-
-    <!-- ================= VIDEO EDITING ================= -->
-
     <div class="card" onclick="flipCard(this)">
 
         <div class="card-inner">
@@ -546,9 +493,6 @@ nav {
         </div>
 
     </div>
-
-    <!-- ================= FREELANCING ================= -->
-
     <div class="card" onclick="flipCard(this)">
 
         <div class="card-inner">
@@ -588,9 +532,6 @@ nav {
         </div>
 
     </div>
-
-    <!-- ================= SOCIAL MEDIA ================= -->
-
     <div class="card" onclick="flipCard(this)">
 
         <div class="card-inner">
@@ -630,9 +571,6 @@ nav {
         </div>
 
     </div>
-
-    <!-- ================= AI ================= -->
-
     <div class="card" onclick="flipCard(this)">
 
         <div class="card-inner">
@@ -672,9 +610,6 @@ nav {
         </div>
 
     </div>
-
-    <!-- ================= TEACHING ================= -->
-
     <div class="card" onclick="flipCard(this)">
 
         <div class="card-inner">
