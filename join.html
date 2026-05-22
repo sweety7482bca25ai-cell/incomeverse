@@ -8,193 +8,276 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #c0d6ff, #eef3f8);
-}
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
- padding: 16px 5%;
-  background: rgb(0, 0, 0);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-.logo {
-  font-size: 26px;
-  font-weight: 800;
-  color: #ffffff;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-}
-.logo i { color: #2d7dff; margin-right: 8px; }
 
-.home-link {
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
-}
-.main-box {
-  width: 900px;
-  height: 520px;
-  display: flex;
-  border-radius: 25px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-
-  margin: 80px auto;
-}
-.left {
-  width: 45%;
-  padding: 40px;
-  background: linear-gradient(135deg, #3b82f6, #60a5fa);
-  color: white;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-.left .logo {
-  border: 1px solid rgba(255,255,255,0.5);
-  display: inline-block;
-  padding: 6px 15px;
-  border-radius: 20px;
-  margin-bottom: 20px;
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#dbeafe,#eff6ff);
+    min-height:100vh;
 }
 
-h2 {
-  margin: 10px 0;
-  font-size: 28px;
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 5%;
+    background:#000;
 }
 
-p {
-  color: #e0e7ff;
-  font-size: 14px;
+.logo{
+    font-size:26px;
+    font-weight:800;
+    color:white;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
 }
 
-.input-box {
-  margin: 15px 0;
+.logo i{
+    color:#2d7dff;
+    margin-right:8px;
 }
 
-input, select {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.2);
-  outline: none;
-  color: #fff;
-  font-size: 14px;
+.home-link{
+    color:white;
+    text-decoration:none;
+    font-size:15px;
 }
 
-select option {
-  color: #000;
+.main-box{
+    width:900px;
+    max-width:95%;
+    min-height:550px;
+    margin:60px auto;
+    display:flex;
+    border-radius:25px;
+    overflow:hidden;
+    background:white;
+    box-shadow:0 20px 50px rgba(0,0,0,0.25);
 }
 
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 25px;
-  background: linear-gradient(135deg, #2563eb, #38bdf8);
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: 0.3s;
-  font-size: 16px;
+.left{
+    width:45%;
+    padding:45px;
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    color:white;
 }
 
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
-}
-.right {
-  width: 55%;
-  background: url("Images/login image.jpeg") center/cover no-repeat;
-  position: relative;
-}
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(37, 99, 235,0.3), rgba(147,197,253,0.1));
-}
-.card-info {
-  position: absolute;
-  bottom: 30px;
-  left: 30px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
-  color: #fff;
-  padding: 20px;
-  border-radius: 15px;
-  width: 220px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  transition: 0.3s;
+.small-logo{
+    display:inline-block;
+    border:1px solid rgba(255,255,255,0.5);
+    padding:8px 18px;
+    border-radius:30px;
+    margin-bottom:20px;
+    font-weight:600;
 }
 
-.card-info:hover {
-  transform: translateY(-5px) scale(1.05);
+.left h2{
+    font-size:32px;
+    margin-bottom:10px;
 }
 
-.card-info h4 {
-  margin-bottom: 5px;
-  font-size: 16px;
+.left p{
+    color:#dbeafe;
+    margin-bottom:25px;
+    line-height:1.6;
 }
 
-.card-info p {
-  font-size: 14px;
+.input-box{
+    margin-bottom:18px;
+}
+
+.input-box input,
+.input-box select{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:30px;
+    background:rgba(255,255,255,0.18);
+    color:white;
+    font-size:15px;
+    outline:none;
+}
+
+.input-box input::placeholder{
+    color:#e5e7eb;
+}
+
+select option{
+    color:black;
+}
+
+.start-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:30px;
+    background:white;
+    color:#2563eb;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.start-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(255,255,255,0.35);
+}
+
+.right{
+    width:55%;
+    position:relative;
+
+    background-image:url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        to top,
+        rgba(37,99,235,0.45),
+        rgba(0,0,0,0.15)
+    );
+}
+
+.card-info{
+    position:absolute;
+    bottom:30px;
+    left:30px;
+    z-index:2;
+
+    width:250px;
+
+    background:rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(10px);
+
+    padding:22px;
+    border-radius:18px;
+
+    color:white;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+.card-info h4{
+    font-size:18px;
+    margin-bottom:10px;
+}
+
+.card-info p{
+    font-size:14px;
+    line-height:1.6;
+    color:#f1f5f9;
+}
+
+@media(max-width:850px){
+
+    .main-box{
+        flex-direction:column;
+    }
+
+    .left,
+    .right{
+        width:100%;
+    }
+
+    .right{
+        min-height:350px;
+    }
+
 }
 
 </style>
 </head>
 
 <body>
+
 <header class="topbar">
-  <a href="index.html" class="logo"><i class="fas fa-globe"></i> IncomeVerse</a>
-  <a class="home-link" href="index.html">Back to Home</a>
-</header>
-<div class="main-box">
-  <div class="left">
-    <div class="logo">IncomePath</div>
-    <h2>Create Your Income Journey</h2>
-    <p>Choose your skill and start earning step by step</p>
 
-    <div class="input-box">
-      <input type="text" placeholder="Full Name">
-    </div>
-
-    <div class="input-box">
-      <input type="email" placeholder="Email Address">
-    </div>
-
-    <div class="input-box">
-      <select>
-        <option>Select Your Interest</option>
-        <option>Freelancing</option>
-        <option>Video Editing</option>
-        <option>AI Tools</option>
-        <option>Social Media</option>
-        <option>Teaching</option>
-        <option>Trading</option>
-      </select>
-    </div>
-
-    <a href="freelancing.html">
-      <button><i class="fa-solid fa-rocket"></i> Start Learning</button>
+    <a href="index.html" class="logo">
+        <i class="fas fa-globe"></i>
+        IncomeVerse
     </a>
-  </div>
-  <div class="right">
-    <div class="overlay"></div>
 
-    <div class="card-info">
-      <h4><i class="fa-solid fa-coins"></i> Income Potential</h4>
-      <p>From zero to paid projects with guided learning paths.</p>
+    <a href="index.html" class="home-link">
+        Back to Home
+    </a>
+
+</header>
+
+<div class="main-box">
+
+    <div class="left">
+
+        <div class="small-logo">
+            IncomePath
+        </div>
+
+        <h2>Create Your Income Journey</h2>
+
+        <p>
+            Choose your skill and start earning step by step with modern digital opportunities.
+        </p>
+
+        <div class="input-box">
+            <input type="text" placeholder="Full Name">
+        </div>
+
+        <div class="input-box">
+            <input type="email" placeholder="Email Address">
+        </div>
+
+        <div class="input-box">
+            <select>
+                <option>Select Your Interest</option>
+                <option>Freelancing</option>
+                <option>Video Editing</option>
+                <option>AI Tools</option>
+                <option>Social Media</option>
+                <option>Teaching</option>
+                <option>Trading</option>
+            </select>
+        </div>
+
+        <a href="Freelancing.html">
+            <button class="start-btn">
+                <i class="fa-solid fa-rocket"></i>
+                Start Learning
+            </button>
+        </a>
+
     </div>
-  </div>
+
+    <div class="right">
+
+        <div class="overlay"></div>
+
+        <div class="card-info">
+
+            <h4>
+                <i class="fa-solid fa-coins"></i>
+                Income Potential
+            </h4>
+
+            <p>
+                Learn modern skills and grow from beginner to paid projects with guided learning paths.
+            </p>
+
+        </div>
+
+    </div>
 
 </div>
 
