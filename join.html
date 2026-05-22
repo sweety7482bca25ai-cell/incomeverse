@@ -240,23 +240,41 @@ select option{
         </div>
 
         <div class="input-box">
-            <select>
-                <option>Select Your Interest</option>
-                <option>Freelancing</option>
-                <option>Video Editing</option>
-                <option>AI Tools</option>
-                <option>Social Media</option>
-                <option>Teaching</option>
-                <option>Trading</option>
-            </select>
-        </div>
+    <select id="interestSelect">
 
-        <a href="Freelancing.html">
-            <button class="start-btn">
-                <i class="fa-solid fa-rocket"></i>
-                Start Learning
-            </button>
-        </a>
+        <option value="">Select Your Interest</option>
+
+        <option value="Freelancing.html">
+            Freelancing
+        </option>
+
+        <option value="Video_Editing.html">
+            Video Editing
+        </option>
+
+        <option value="AI_Tools.html">
+            AI Tools
+        </option>
+
+        <option value="Social_Media.html">
+            Social Media
+        </option>
+
+        <option value="Teaching.html">
+            Teaching
+        </option>
+
+        <option value="Trading.html">
+            Trading
+        </option>
+
+    </select>
+</div>
+
+<button class="start-btn" onclick="openPage()">
+    <i class="fa-solid fa-rocket"></i>
+    Start Learning
+</button>
 
     </div>
 
@@ -280,6 +298,22 @@ select option{
     </div>
 
 </div>
+<script>
 
+function openPage(){
+
+    let selectedPage =
+    document.getElementById("interestSelect").value;
+
+    if(selectedPage === ""){
+
+        alert("Please select your interest first!");
+        return;
+    }
+
+    window.location.href = selectedPage;
+}
+
+</script>
 </body>
 </html>
