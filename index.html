@@ -163,6 +163,89 @@
             transition: 0.3s;
         }
         .search-container button:hover { background: #0056b3; }
+        
+        .recommendations-container {
+            display: none;
+            margin-top: 20px;
+            max-width: 100%;
+            max-height: 400px;
+            overflow-y: auto;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .recommendations-container.active {
+            display: block;
+        }
+
+        .recommendations-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            padding: 0 20px;
+        }
+
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            color: #333;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+            border-color: #007bff;
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+        }
+
+        .recommendation-card-icon {
+            font-size: 24px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .recommendation-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #222;
+        }
+
+        .recommendation-card-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .recommendation-card-link {
+            display: inline-block;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .recommendation-card-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         .badges { 
             margin-top: 40px; 
             display: flex; 
@@ -485,11 +568,16 @@
                 id="userInput"
                 placeholder="What service are you looking for today?"
                 onkeypress="handleKeyPress(event)"
+                oninput="updateRecommendations()"
             >
 
             <button onclick="searchService()">
                 Search
             </button>
+        </div>
+
+        <div id="recommendationsContainer" class="recommendations-container">
+            <div id="recommendationsList" class="recommendations-list"></div>
         </div>
 
         <div class="badges">
@@ -501,6 +589,206 @@
 </section>
 
 <script>
+
+// Course recommendations database
+const courseRecommendations = {
+    freelanc: [
+        {
+            title: "Freelancing Mastery",
+            desc: "Learn to build a thriving freelance career",
+            icon: "fas fa-briefcase",
+            link: "Freelancing.html"
+        },
+        {
+            title: "Client Management",
+            desc: "Master client relations and project delivery",
+            icon: "fas fa-users",
+            link: "Freelancing.html"
+        },
+        {
+            title: "Proposal Writing",
+            desc: "Create winning proposals that land clients",
+            icon: "fas fa-pen-fancy",
+            link: "Freelancing.html"
+        }
+    ],
+    skill: [
+        {
+            title: "Skill Development",
+            desc: "Explore and develop in-demand skills",
+            icon: "fas fa-graduation-cap",
+            link: "Cards.html"
+        },
+        {
+            title: "Certification Paths",
+            desc: "Get certified in your field of expertise",
+            icon: "fas fa-certificate",
+            link: "Cards.html"
+        },
+        {
+            title: "Skill Marketplace",
+            desc: "Showcase and monetize your skills",
+            icon: "fas fa-star",
+            link: "Cards.html"
+        }
+    ],
+    trad: [
+        {
+            title: "Trading Fundamentals",
+            desc: "Start your journey in the trading world",
+            icon: "fas fa-chart-line",
+            link: "Trading.html"
+        },
+        {
+            title: "Market Analysis",
+            desc: "Master technical and fundamental analysis",
+            icon: "fas fa-analytics",
+            link: "Trading.html"
+        },
+        {
+            title: "Risk Management",
+            desc: "Protect your capital with smart strategies",
+            icon: "fas fa-shield-alt",
+            link: "Trading.html"
+        }
+    ],
+    teach: [
+        {
+            title: "Online Teaching",
+            desc: "Build your online teaching business",
+            icon: "fas fa-chalkboard-user",
+            link: "Teaching.html"
+        },
+        {
+            title: "Course Creation",
+            desc: "Create and sell your own courses",
+            icon: "fas fa-video",
+            link: "Teaching.html"
+        },
+        {
+            title: "Student Engagement",
+            desc: "Keep students motivated and learning",
+            icon: "fas fa-handshake",
+            link: "Teaching.html"
+        }
+    ],
+    video: [
+        {
+            title: "Video Editing Basics",
+            desc: "Learn professional video editing tools",
+            icon: "fas fa-film",
+            link: "Video_Editing.html"
+        },
+        {
+            title: "Content Creation",
+            desc: "Create engaging video content",
+            icon: "fas fa-camera",
+            link: "Video_Editing.html"
+        },
+        {
+            title: "YouTube Mastery",
+            desc: "Grow your YouTube channel from scratch",
+            icon: "fas fa-play-circle",
+            link: "Video_Editing.html"
+        }
+    ],
+    social: [
+        {
+            title: "Social Media Marketing",
+            desc: "Master the art of social media promotion",
+            icon: "fas fa-share-nodes",
+            link: "Social_Media.html"
+        },
+        {
+            title: "Content Strategy",
+            desc: "Plan and execute winning content strategies",
+            icon: "fas fa-diagram-project",
+            link: "Social_Media.html"
+        },
+        {
+            title: "Influencer Growth",
+            desc: "Build your personal brand online",
+            icon: "fas fa-person-circle-plus",
+            link: "Social_Media.html"
+        }
+    ],
+    ai: [
+        {
+            title: "AI Fundamentals",
+            desc: "Understand the basics of Artificial Intelligence",
+            icon: "fas fa-brain",
+            link: "AI_Tools.html"
+        },
+        {
+            title: "AI Tool Mastery",
+            desc: "Learn to use cutting-edge AI tools",
+            icon: "fas fa-wand-magic-sparkles",
+            link: "AI_Tools.html"
+        },
+        {
+            title: "Prompt Engineering",
+            desc: "Master the art of effective prompts",
+            icon: "fas fa-keyboard",
+            link: "AI_Tools.html"
+        }
+    ]
+};
+
+function updateRecommendations() {
+    const input = document.getElementById('userInput').value.toLowerCase().trim();
+    const container = document.getElementById('recommendationsContainer');
+    const list = document.getElementById('recommendationsList');
+
+    if (input.length === 0) {
+        container.classList.remove('active');
+        return;
+    }
+
+    let recommendations = [];
+
+    // Find matching courses
+    for (const [key, courses] of Object.entries(courseRecommendations)) {
+        if (key.includes(input) || input.includes(key)) {
+            recommendations = courses;
+            break;
+        }
+    }
+
+    // If no exact match, search in course titles and descriptions
+    if (recommendations.length === 0) {
+        for (const [key, courses] of Object.entries(courseRecommendations)) {
+            const matchedCourses = courses.filter(course =>
+                course.title.toLowerCase().includes(input) ||
+                course.desc.toLowerCase().includes(input)
+            );
+            if (matchedCourses.length > 0) {
+                recommendations = matchedCourses;
+                break;
+            }
+        }
+    }
+
+    // Render recommendations
+    if (recommendations.length > 0) {
+        list.innerHTML = recommendations.map(course => `
+            <div class="recommendation-card" onclick="navigateToService('${course.link}')">
+                <div class="recommendation-card-icon">
+                    <i class="${course.icon}"></i>
+                </div>
+                <div class="recommendation-card-title">${course.title}</div>
+                <div class="recommendation-card-desc">${course.desc}</div>
+                <a href="${course.link}" class="recommendation-card-link">Explore →</a>
+            </div>
+        `).join('');
+        container.classList.add('active');
+    } else {
+        container.classList.remove('active');
+    }
+}
+
+function navigateToService(link) {
+    window.location.href = link;
+}
 
 function searchService() {
 
