@@ -589,8 +589,6 @@
 </section>
 
 <script>
-
-// Course recommendations database
 const courseRecommendations = {
     freelanc: [
         {
@@ -753,8 +751,6 @@ function updateRecommendations() {
             break;
         }
     }
-
-    // If no exact match, search in course titles and descriptions
     if (recommendations.length === 0) {
         for (const [key, courses] of Object.entries(courseRecommendations)) {
             const matchedCourses = courses.filter(course =>
@@ -767,8 +763,6 @@ function updateRecommendations() {
             }
         }
     }
-
-    // Render recommendations
     if (recommendations.length > 0) {
         list.innerHTML = recommendations.map(course => `
             <div class="recommendation-card" onclick="navigateToService('${course.link}')">
